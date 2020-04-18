@@ -1,0 +1,91 @@
+html {
+  background: #c5d5d5;
+  font-family: Arial, Helvetica, sans-serif;
+}
+
+nav > ul {
+  line-height: 2;
+  width: 90%;
+  text-align: left;
+  font-weight: bold;
+  font-size: 20px;
+  padding-left: 5%;
+  list-style: none;
+  margin: 0;
+  display: inline-flex;
+  justify-content: space-between;
+}
+
+header {
+  color: #d59fd9;
+  font-weight: bold;
+  text-align: center;
+  font-size: 20px;
+}
+
+header img {
+  width: 100%;
+  height: 10%;
+}
+
+#Home p {
+  color: #d59fd9;
+  font-weight: bold;
+  font-size: 40px;
+  text-align: center;
+}
+
+#Home h1 {
+  color: #f7dfdd;
+  text-align: center;
+}
+
+#Home img {
+  width: 50%;
+  box-sizing: initial;
+  padding-left: 300px;
+}
+
+#Bio h1 {
+  color: #a3a0b3;
+  font-weight: bold;
+  font-size: 30px;
+  text-align: center;
+}
+
+#Bio ul {
+  color: #3a3e41;
+  font-size: 20px;
+  list-style: none;
+  font-weight: bold;
+}
+
+#Bio p {
+  color: #3a3e41;
+  font-size: 15px;
+}
+
+#Blog h1 {
+  color: #a3a0b3;
+  font-size: 30px;
+}
+
+#Blog h2 {
+  color: #d59fd9;
+  font-size: 20px;
+}
+
+#Blog textarea {
+  font-size: 20px;
+}
+
+footer {
+  text-align: center;
+  font-weight: bold;
+  vertical-align: baseline;
+  color: darkgray;
+  clear: both;
+}
+
+
+/*# sourceMappingURL=/style.e308ff8e.css.map */
