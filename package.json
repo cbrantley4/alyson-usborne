@@ -1,7 +1,6 @@
 {
   "name": "savvy-starter",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "serve": "parcel index.html",
@@ -11,23 +10,32 @@
   "author": "",
   "license": "ISC",
   "devDependencies": {
+    "eslint": "^6.8.0",
+    "eslint-config-prettier": "^6.11.0",
+    "eslint-plugin-prettier": "^3.1.3",
     "parcel-bundler": "^1.12.4",
-    "eslint": "^6.6.0",
-    "eslint-config-prettier": "^6.5.0",
-    "eslint-plugin-prettier": "^3.1.1",
     "prettier": "1.19.1",
     "stylelint": "^11.1.1",
     "stylelint-config-prettier": "^6.0.0",
     "stylelint-config-recommended": "^3.0.0",
-    "stylelint-prettier": "^1.1.1",
+    "stylelint-prettier": "^1.1.2",
     "stylelint-vscode": "^7.0.0-6"
   },
   "dependencies": {
     "axios": "^0.19.2",
     "dotenv": "^8.2.0",
-    "firebase": "^7.13.1",
+    "firebase": "^7.14.2",
     "lodash": "^4.17.15",
     "navigo": "^7.1.2",
     "store": "^2.0.12"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/cbrantley4/alyson-usborne.git"
+  },
+  "bugs": {
+    "url": "https://github.com/cbrantley4/alyson-usborne/issues"
+  },
+  "homepage": "https://github.com/cbrantley4/alyson-usborne#readme",
+  "description": ""
 }

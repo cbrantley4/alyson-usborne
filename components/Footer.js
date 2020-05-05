@@ -1,1 +1,2 @@
-export default () => `<footer>&copy Brantley 2020</footer>`;
+export default () => `
+<footer>&copy Brantley 2020</footer>`;

@@ -1,26 +1,23 @@
 html {
-  background: #c5d5d5;
+  background: white;
   font-family: Arial, Helvetica, sans-serif;
 }
 
 nav > ul {
-  line-height: 2;
-  width: 90%;
+  line-height: 3;
+  width: 20%;
   text-align: left;
   font-weight: bold;
   font-size: 20px;
-  padding-left: 5%;
   list-style: none;
   margin: 0;
-  display: inline-flex;
-  justify-content: space-between;
+  position: fixed;
 }
 
 header {
   color: #d59fd9;
-  font-weight: bold;
   text-align: center;
-  font-size: 20px;
+  font-size: 15px;
 }
 
 header img {
@@ -37,7 +34,10 @@ header img {
 
 #Home h1 {
   color: #f7dfdd;
-  text-align: center;
+  text-align: right;
+  vertical-align: text-top;
+  padding-right: 40px;
+  clear: both;
 }
 
 #Home img {
@@ -58,6 +58,8 @@ header img {
   font-size: 20px;
   list-style: none;
   font-weight: bold;
+  padding-left: 200px;
+  padding-right: 50px;
 }
 
 #Bio p {
@@ -68,15 +70,29 @@ header img {
 #Blog h1 {
   color: #a3a0b3;
   font-size: 30px;
+  text-align: center;
 }
 
 #Blog h2 {
   color: #d59fd9;
   font-size: 20px;
+  padding-left: 250px;
+  padding-right: 100px;
+  padding-bottom: 40px;
 }
 
 #Blog textarea {
-  font-size: 20px;
+  font-size: 15px;
+  position: fixed;
+  border: solid;
+  margin-left: 300px;
+}
+
+#Blog button {
+  font-size: 25px;
+  font-weight: bold;
+  width: 10%;
+  float: right;
 }
 
 footer {
@@ -85,6 +101,12 @@ footer {
   vertical-align: baseline;
   color: darkgray;
   clear: both;
+}
+
+#Post h1 {
+  color: #d59fd9;
+  font-size: 20px;
+  text-align: center;
 }
 
 

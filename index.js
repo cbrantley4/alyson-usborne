@@ -20,3 +20,15 @@ router
     ":page": params => render(state[capitalize(params.page)])
   })
   .resolve();
+
+router.updatePage();
+listenForPostClick(state);
+
+function listenForPostClick(st) {
+  if (st.view === "Blog") {
+    document.querySelector("post").addEventListener("click", event => {
+      event.preventDefault();
+      render(state.Post);
+    });
+  }
+}

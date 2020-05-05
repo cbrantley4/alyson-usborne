@@ -126,7 +126,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _default = function _default(st) {
-  return "\n    <header>\n        <h1>".concat(st.header, "</h1>\n    </header>");
+  return "\n    <header>\n        <h1><a href =\"https://b8886.myubam.com/\" target =\"_blank\">Visit my site</a></h1>\n        <h1>".concat(st.header, "</h1>\n    </header>");
 };
 
 exports.default = _default;
@@ -139,7 +139,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _default = function _default() {
-  return "<footer>&copy Brantley 2020</footer>";
+  return "\n<footer>&copy Brantley 2020</footer>";
 };
 
 exports.default = _default;
@@ -152,7 +152,7 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _default = function _default() {
-  return "\n    <section id=\"Home\">\n        <p>Alyson Cornman's Usborne Page</p>\n        <img src = \"https://images.unsplash.com/photo-1531208483756-19591c7c4ab8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60\">\n        <h1><a href =\"https://b8886.myubam.com/\" target =\"_blank\">Visit my site</a></h1>\n    </section>\n";
+  return "\n    <section id=\"Home\">\n        <p>Alyson Cornman's Usborne Page</p>\n        <img src = \"https://images.unsplash.com/photo-1531208483756-19591c7c4ab8?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60\">\n    </section>\n";
 };
 
 exports.default = _default;
@@ -169,221 +169,7 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"components/views/Blog.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _default = function _default() {
-  return "\n    <section id=\"Blog\">\n        <h1>Thank you for visiting my site!</h1>\n        <h2>Please leave me a comment about your experience below</h2>\n        <textarea id=\"responses\" name=\"response\" rows=\"20\" cols=\"100\">I enjoyed visiting your site!</textarea>\n    </section>\n";
-};
-
-exports.default = _default;
-},{}],"components/views/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Home", {
-  enumerable: true,
-  get: function () {
-    return _Home.default;
-  }
-});
-Object.defineProperty(exports, "Bio", {
-  enumerable: true,
-  get: function () {
-    return _Bio.default;
-  }
-});
-Object.defineProperty(exports, "Blog", {
-  enumerable: true,
-  get: function () {
-    return _Blog.default;
-  }
-});
-
-var _Home = _interopRequireDefault(require("./Home"));
-
-var _Bio = _interopRequireDefault(require("./Bio"));
-
-var _Blog = _interopRequireDefault(require("./Blog"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Home":"components/views/Home.js","./Bio":"components/views/Bio.js","./Blog":"components/views/Blog.js"}],"components/Main.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var views = _interopRequireWildcard(require("./views"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-var _default = function _default(st) {
-  return "\n".concat(views[st.view](st), "\n");
-};
-
-exports.default = _default;
-},{"./views":"components/views/index.js"}],"components/Nav.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _default = function _default(links) {
-  return "\n<nav>\n    <i class=\"fas fa-bars\"></i>\n        <ul class =\"hidden--mobile nav-links\">\n            ".concat(links.map(function (link) {
-    return "<li><a href=\"/".concat(link.title, "\" data-navigo>").concat(link.text, "</a></li>");
-  }).join(""), "\n        </ul>\n</nav>");
-};
-
-exports.default = _default;
-},{}],"components/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Header", {
-  enumerable: true,
-  get: function () {
-    return _Header.default;
-  }
-});
-Object.defineProperty(exports, "Footer", {
-  enumerable: true,
-  get: function () {
-    return _Footer.default;
-  }
-});
-Object.defineProperty(exports, "Main", {
-  enumerable: true,
-  get: function () {
-    return _Main.default;
-  }
-});
-Object.defineProperty(exports, "Nav", {
-  enumerable: true,
-  get: function () {
-    return _Nav.default;
-  }
-});
-
-var _Header = _interopRequireDefault(require("./Header"));
-
-var _Footer = _interopRequireDefault(require("./Footer"));
-
-var _Main = _interopRequireDefault(require("./Main"));
-
-var _Nav = _interopRequireDefault(require("./Nav"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Header":"components/Header.js","./Footer":"components/Footer.js","./Main":"components/Main.js","./Nav":"components/Nav.js"}],"store/Bio.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Bio"
-};
-exports.default = _default;
-},{}],"store/Blog.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Blog",
-  trails: []
-};
-exports.default = _default;
-},{}],"store/Home.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Home"
-};
-exports.default = _default;
-},{}],"store/Links.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = [{
-  title: "Home",
-  text: "Home"
-}, {
-  title: "Bio",
-  text: "Bio"
-}, {
-  title: "Blog",
-  text: "Blog"
-}];
-exports.default = _default;
-},{}],"store/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Bio", {
-  enumerable: true,
-  get: function () {
-    return _Bio.default;
-  }
-});
-Object.defineProperty(exports, "Blog", {
-  enumerable: true,
-  get: function () {
-    return _Blog.default;
-  }
-});
-Object.defineProperty(exports, "Home", {
-  enumerable: true,
-  get: function () {
-    return _Home.default;
-  }
-});
-Object.defineProperty(exports, "Links", {
-  enumerable: true,
-  get: function () {
-    return _Links.default;
-  }
-});
-
-var _Bio = _interopRequireDefault(require("./Bio"));
-
-var _Blog = _interopRequireDefault(require("./Blog"));
-
-var _Home = _interopRequireDefault(require("./Home"));
-
-var _Links = _interopRequireDefault(require("./Links"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Bio":"store/Bio.js","./Blog":"store/Blog.js","./Home":"store/Home.js","./Links":"store/Links.js"}],"node_modules/base64-js/index.js":[function(require,module,exports) {
+},{}],"node_modules/base64-js/index.js":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -19540,7 +19326,268 @@ var define;
   }
 }.call(this));
 
-},{"buffer":"node_modules/buffer/index.js"}],"node_modules/navigo/lib/navigo.min.js":[function(require,module,exports) {
+},{"buffer":"node_modules/buffer/index.js"}],"components/views/Blog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _lodash = require("lodash");
+
+var _default = function _default() {
+  return "\n    <section id=\"Blog\">\n        <h1>Thank you for visiting my site!</h1>\n        <h2>Please leave me a comment about your experience below. Your comments\n        will be posted to this page when you hit enter.</h2>\n        <textfield>\n          <textarea type =\"text\" id=\"text\" rows=\"10\" cols=\"100\"></textarea>\n        </textfield>\n        <div>\n          <button><a href=\"#Post\"></a>Enter</button>\n        </div>\n    </section>\n";
+};
+
+exports.default = _default;
+},{"lodash":"node_modules/lodash/lodash.js"}],"components/views/Post.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default() {
+  return "\n    <section id =\"Post\">\n        <h1>See what other people think.</h1>\n    </section>\n    ";
+};
+
+exports.default = _default;
+},{}],"components/views/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Home", {
+  enumerable: true,
+  get: function () {
+    return _Home.default;
+  }
+});
+Object.defineProperty(exports, "Bio", {
+  enumerable: true,
+  get: function () {
+    return _Bio.default;
+  }
+});
+Object.defineProperty(exports, "Blog", {
+  enumerable: true,
+  get: function () {
+    return _Blog.default;
+  }
+});
+Object.defineProperty(exports, "Post", {
+  enumerable: true,
+  get: function () {
+    return _Post.default;
+  }
+});
+
+var _Home = _interopRequireDefault(require("./Home"));
+
+var _Bio = _interopRequireDefault(require("./Bio"));
+
+var _Blog = _interopRequireDefault(require("./Blog"));
+
+var _Post = _interopRequireDefault(require("./Post"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Home":"components/views/Home.js","./Bio":"components/views/Bio.js","./Blog":"components/views/Blog.js","./Post":"components/views/Post.js"}],"components/Main.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var views = _interopRequireWildcard(require("./views"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var _default = function _default(st) {
+  return "\n".concat(views[st.view](st), "\n");
+};
+
+exports.default = _default;
+},{"./views":"components/views/index.js"}],"components/Nav.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default(links) {
+  return "\n<nav>\n    <i class=\"fas fa-bars\"></i>\n        <ul class =\"hidden--mobile nav-links\">\n            ".concat(links.map(function (link) {
+    return "<li><a href=\"/".concat(link.title, "\" data-navigo>").concat(link.text, "</a></li>");
+  }).join(""), "\n        </ul>\n</nav>");
+};
+
+exports.default = _default;
+},{}],"components/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Header", {
+  enumerable: true,
+  get: function () {
+    return _Header.default;
+  }
+});
+Object.defineProperty(exports, "Footer", {
+  enumerable: true,
+  get: function () {
+    return _Footer.default;
+  }
+});
+Object.defineProperty(exports, "Main", {
+  enumerable: true,
+  get: function () {
+    return _Main.default;
+  }
+});
+Object.defineProperty(exports, "Nav", {
+  enumerable: true,
+  get: function () {
+    return _Nav.default;
+  }
+});
+
+var _Header = _interopRequireDefault(require("./Header"));
+
+var _Footer = _interopRequireDefault(require("./Footer"));
+
+var _Main = _interopRequireDefault(require("./Main"));
+
+var _Nav = _interopRequireDefault(require("./Nav"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Header":"components/Header.js","./Footer":"components/Footer.js","./Main":"components/Main.js","./Nav":"components/Nav.js"}],"store/Bio.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Bio"
+};
+exports.default = _default;
+},{}],"store/Blog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Blog",
+  posts: []
+};
+exports.default = _default;
+},{}],"store/Home.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Home"
+};
+exports.default = _default;
+},{}],"store/Links.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = [{
+  title: "Home",
+  text: "Home"
+}, {
+  title: "Bio",
+  text: "Bio"
+}, {
+  title: "Blog",
+  text: "Blog"
+}, {
+  title: "Post",
+  text: "Post"
+}];
+exports.default = _default;
+},{}],"store/Post.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Post",
+  posts: []
+};
+exports.default = _default;
+},{}],"store/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Bio", {
+  enumerable: true,
+  get: function () {
+    return _Bio.default;
+  }
+});
+Object.defineProperty(exports, "Blog", {
+  enumerable: true,
+  get: function () {
+    return _Blog.default;
+  }
+});
+Object.defineProperty(exports, "Home", {
+  enumerable: true,
+  get: function () {
+    return _Home.default;
+  }
+});
+Object.defineProperty(exports, "Links", {
+  enumerable: true,
+  get: function () {
+    return _Links.default;
+  }
+});
+Object.defineProperty(exports, "Post", {
+  enumerable: true,
+  get: function () {
+    return _Post.default;
+  }
+});
+
+var _Bio = _interopRequireDefault(require("./Bio"));
+
+var _Blog = _interopRequireDefault(require("./Blog"));
+
+var _Home = _interopRequireDefault(require("./Home"));
+
+var _Links = _interopRequireDefault(require("./Links"));
+
+var _Post = _interopRequireDefault(require("./Post"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Bio":"store/Bio.js","./Blog":"store/Blog.js","./Home":"store/Home.js","./Links":"store/Links.js","./Post":"store/Post.js"}],"node_modules/navigo/lib/navigo.min.js":[function(require,module,exports) {
 var define;
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Navigo=t()}(this,function(){"use strict";var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function t(){return!("undefined"==typeof window||!window.history||!window.history.pushState)}function n(e,n,o){this.root=null,this._routes=[],this._useHash=n,this._hash=void 0===o?"#":o,this._paused=!1,this._destroyed=!1,this._lastRouteResolved=null,this._notFoundHandler=null,this._defaultHandler=null,this._usePushState=!n&&t(),this._onLocationChange=this._onLocationChange.bind(this),this._genericHooks=null,this._historyAPIUpdateMethod="pushState",e?this.root=n?e.replace(/\/$/,"/"+this._hash):e.replace(/\/$/,""):n&&(this.root=this._cLoc().split(this._hash)[0].replace(/\/$/,"/"+this._hash)),this._listen(),this.updatePageLinks()}function o(e){return e instanceof RegExp?e:e.replace(/\/+$/,"").replace(/^\/+/,"^/")}function i(e){return e.replace(/\/$/,"").split("/").length}function s(e,t){return i(t)-i(e)}function r(e,t){return function(e){return(arguments.length>1&&void 0!==arguments[1]?arguments[1]:[]).map(function(t){var i=function(e){var t=[];return{regexp:e instanceof RegExp?e:new RegExp(e.replace(n.PARAMETER_REGEXP,function(e,o,i){return t.push(i),n.REPLACE_VARIABLE_REGEXP}).replace(n.WILDCARD_REGEXP,n.REPLACE_WILDCARD)+n.FOLLOWED_BY_SLASH_REGEXP,n.MATCH_REGEXP_FLAGS),paramNames:t}}(o(t.route)),s=i.regexp,r=i.paramNames,a=e.replace(/^\/+/,"/").match(s),h=function(e,t){return 0===t.length?null:e?e.slice(1,e.length).reduce(function(e,n,o){return null===e&&(e={}),e[t[o]]=decodeURIComponent(n),e},null):null}(a,r);return!!a&&{match:a,route:t,params:h}}).filter(function(e){return e})}(e,t)[0]||!1}function a(e,t){var n=t.map(function(t){return""===t.route||"*"===t.route?e:e.split(new RegExp(t.route+"($|/)"))[0]}),i=o(e);return n.length>1?n.reduce(function(e,t){return e.length>t.length&&(e=t),e},n[0]):1===n.length?n[0]:i}function h(e,n,o){var i,s=function(e){return e.split(/\?(.*)?$/)[0]};return void 0===o&&(o="#"),t()&&!n?s(e).split(o)[0]:(i=e.split(o)).length>1?s(i[1]):s(i[0])}function u(t,n,o){if(n&&"object"===(void 0===n?"undefined":e(n))){if(n.before)return void n.before(function(){(!(arguments.length>0&&void 0!==arguments[0])||arguments[0])&&(t(),n.after&&n.after(o))},o);if(n.after)return t(),void(n.after&&n.after(o))}t()}return n.prototype={helpers:{match:r,root:a,clean:o,getOnlyURL:h},navigate:function(e,t){var n;return e=e||"",this._usePushState?(n=(n=(t?"":this._getRoot()+"/")+e.replace(/^\/+/,"/")).replace(/([^:])(\/{2,})/g,"$1/"),history[this._historyAPIUpdateMethod]({},"",n),this.resolve()):"undefined"!=typeof window&&(e=e.replace(new RegExp("^"+this._hash),""),window.location.href=window.location.href.replace(/#$/,"").replace(new RegExp(this._hash+".*$"),"")+this._hash+e),this},on:function(){for(var t=this,n=arguments.length,o=Array(n),i=0;i<n;i++)o[i]=arguments[i];if("function"==typeof o[0])this._defaultHandler={handler:o[0],hooks:o[1]};else if(o.length>=2)if("/"===o[0]){var r=o[1];"object"===e(o[1])&&(r=o[1].uses),this._defaultHandler={handler:r,hooks:o[2]}}else this._add(o[0],o[1],o[2]);else"object"===e(o[0])&&Object.keys(o[0]).sort(s).forEach(function(e){t.on(e,o[0][e])});return this},off:function(e){return null!==this._defaultHandler&&e===this._defaultHandler.handler?this._defaultHandler=null:null!==this._notFoundHandler&&e===this._notFoundHandler.handler&&(this._notFoundHandler=null),this._routes=this._routes.reduce(function(t,n){return n.handler!==e&&t.push(n),t},[]),this},notFound:function(e,t){return this._notFoundHandler={handler:e,hooks:t},this},resolve:function(e){var n,o,i=this,s=(e||this._cLoc()).replace(this._getRoot(),"");this._useHash&&(s=s.replace(new RegExp("^/"+this._hash),"/"));var a=function(e){return e.split(/\?(.*)?$/).slice(1).join("")}(e||this._cLoc()),l=h(s,this._useHash,this._hash);return!this._paused&&(this._lastRouteResolved&&l===this._lastRouteResolved.url&&a===this._lastRouteResolved.query?(this._lastRouteResolved.hooks&&this._lastRouteResolved.hooks.already&&this._lastRouteResolved.hooks.already(this._lastRouteResolved.params),!1):(o=r(l,this._routes))?(this._callLeave(),this._lastRouteResolved={url:l,query:a,hooks:o.route.hooks,params:o.params,name:o.route.name},n=o.route.handler,u(function(){u(function(){o.route.route instanceof RegExp?n.apply(void 0,o.match.slice(1,o.match.length)):n(o.params,a)},o.route.hooks,o.params,i._genericHooks)},this._genericHooks,o.params),o):this._defaultHandler&&(""===l||"/"===l||l===this._hash||function(e,n,o){if(t()&&!n)return!1;if(!e.match(o))return!1;var i=e.split(o);return i.length<2||""===i[1]}(l,this._useHash,this._hash))?(u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._defaultHandler.hooks},i._defaultHandler.handler(a)},i._defaultHandler.hooks)},this._genericHooks),!0):(this._notFoundHandler&&u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._notFoundHandler.hooks},i._notFoundHandler.handler(a)},i._notFoundHandler.hooks)},this._genericHooks),!1))},destroy:function(){this._routes=[],this._destroyed=!0,this._lastRouteResolved=null,this._genericHooks=null,clearTimeout(this._listeningInterval),"undefined"!=typeof window&&(window.removeEventListener("popstate",this._onLocationChange),window.removeEventListener("hashchange",this._onLocationChange))},updatePageLinks:function(){var e=this;"undefined"!=typeof document&&this._findLinks().forEach(function(t){t.hasListenerAttached||(t.addEventListener("click",function(n){if((n.ctrlKey||n.metaKey)&&"a"==n.target.tagName.toLowerCase())return!1;var o=e.getLinkPath(t);e._destroyed||(n.preventDefault(),e.navigate(o.replace(/\/+$/,"").replace(/^\/+/,"/")))}),t.hasListenerAttached=!0)})},generate:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=this._routes.reduce(function(n,o){var i;if(o.name===e)for(i in n=o.route,t)n=n.toString().replace(":"+i,t[i]);return n},"");return this._useHash?this._hash+n:n},link:function(e){return this._getRoot()+e},pause:function(){var e=!(arguments.length>0&&void 0!==arguments[0])||arguments[0];this._paused=e,this._historyAPIUpdateMethod=e?"replaceState":"pushState"},resume:function(){this.pause(!1)},historyAPIUpdateMethod:function(e){return void 0===e?this._historyAPIUpdateMethod:(this._historyAPIUpdateMethod=e,e)},disableIfAPINotAvailable:function(){t()||this.destroy()},lastRouteResolved:function(){return this._lastRouteResolved},getLinkPath:function(e){return e.getAttribute("href")},hooks:function(e){this._genericHooks=e},_add:function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;return"string"==typeof t&&(t=encodeURI(t)),this._routes.push("object"===(void 0===n?"undefined":e(n))?{route:t,handler:n.uses,name:n.as,hooks:o||n.hooks}:{route:t,handler:n,hooks:o}),this._add},_getRoot:function(){return null!==this.root?this.root:(this.root=a(this._cLoc().split("?")[0],this._routes),this.root)},_listen:function(){var e=this;if(this._usePushState)window.addEventListener("popstate",this._onLocationChange);else if("undefined"!=typeof window&&"onhashchange"in window)window.addEventListener("hashchange",this._onLocationChange);else{var t=this._cLoc(),n=void 0,o=void 0;(o=function(){n=e._cLoc(),t!==n&&(t=n,e.resolve()),e._listeningInterval=setTimeout(o,200)})()}},_cLoc:function(){return"undefined"!=typeof window?void 0!==window.__NAVIGO_WINDOW_LOCATION_MOCK__?window.__NAVIGO_WINDOW_LOCATION_MOCK__:o(window.location.href):""},_findLinks:function(){return[].slice.call(document.querySelectorAll("[data-navigo]"))},_onLocationChange:function(){this.resolve()},_callLeave:function(){var e=this._lastRouteResolved;e&&e.hooks&&e.hooks.leave&&e.hooks.leave(e.params)}},n.PARAMETER_REGEXP=/([:*])(\w+)/g,n.WILDCARD_REGEXP=/\*/g,n.REPLACE_VARIABLE_REGEXP="([^/]+)",n.REPLACE_WILDCARD="(?:.*)",n.FOLLOWED_BY_SLASH_REGEXP="(?:/$|$)",n.MATCH_REGEXP_FLAGS="",n});
 
@@ -19577,6 +19624,17 @@ router.on({
     return render(state[(0, _lodash.capitalize)(params.page)]);
   }
 }).resolve();
+router.updatePage();
+listenForPostClick(state);
+
+function listenForPostClick(st) {
+  if (st.view === "Blog") {
+    document.querySelector("post").addEventListener("click", function (event) {
+      event.preventDefault();
+      render(state.Post);
+    });
+  }
+}
 },{"./components":"components/index.js","./store":"store/index.js","lodash":"node_modules/lodash/lodash.js","navigo":"node_modules/navigo/lib/navigo.min.js"}],"node_modules/parcel-bundler/src/builtins/hmr-runtime.js":[function(require,module,exports) {
 var global = arguments[3];
 var OVERLAY_ID = '__parcel__error__overlay__';
@@ -19605,7 +19663,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "51533" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "49540" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
