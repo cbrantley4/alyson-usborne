@@ -156,7 +156,267 @@ var _default = function _default() {
 };
 
 exports.default = _default;
-},{}],"components/views/Bio.js":[function(require,module,exports) {
+},{}],"node_modules/flatted/esm/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.stringify = exports.parse = exports.default = void 0;
+
+var Flatted = function (Primitive, primitive) {
+  /*!
+   * ISC License
+   *
+   * Copyright (c) 2018, Andrea Giammarchi, @WebReflection
+   *
+   * Permission to use, copy, modify, and/or distribute this software for any
+   * purpose with or without fee is hereby granted, provided that the above
+   * copyright notice and this permission notice appear in all copies.
+   *
+   * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+   * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+   * AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+   * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+   * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE
+   * OR OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+   * PERFORMANCE OF THIS SOFTWARE.
+   */
+  var Flatted = {
+    parse: function parse(text, reviver) {
+      var input = JSON.parse(text, Primitives).map(primitives);
+      var value = input[0];
+      var $ = reviver || noop;
+      var tmp = typeof value === 'object' && value ? revive(input, new Set(), value, $) : value;
+      return $.call({
+        '': tmp
+      }, '', tmp);
+    },
+    stringify: function stringify(value, replacer, space) {
+      for (var firstRun, known = new Map(), input = [], output = [], $ = replacer && typeof replacer === typeof input ? function (k, v) {
+        if (k === '' || -1 < replacer.indexOf(k)) return v;
+      } : replacer || noop, i = +set(known, input, $.call({
+        '': value
+      }, '', value)), replace = function (key, value) {
+        if (firstRun) {
+          firstRun = !firstRun;
+          return value; // this was invoking twice each root object
+          // return i < 1 ? value : $.call(this, key, value);
+        }
+
+        var after = $.call(this, key, value);
+
+        switch (typeof after) {
+          case 'object':
+            if (after === null) return after;
+
+          case primitive:
+            return known.get(after) || set(known, input, after);
+        }
+
+        return after;
+      }; i < input.length; i++) {
+        firstRun = true;
+        output[i] = JSON.stringify(input[i], replace, space);
+      }
+
+      return '[' + output.join(',') + ']';
+    }
+  };
+  return Flatted;
+
+  function noop(key, value) {
+    return value;
+  }
+
+  function revive(input, parsed, output, $) {
+    return Object.keys(output).reduce(function (output, key) {
+      var value = output[key];
+
+      if (value instanceof Primitive) {
+        var tmp = input[value];
+
+        if (typeof tmp === 'object' && !parsed.has(tmp)) {
+          parsed.add(tmp);
+          output[key] = $.call(output, key, revive(input, parsed, tmp, $));
+        } else {
+          output[key] = $.call(output, key, tmp);
+        }
+      } else output[key] = $.call(output, key, value);
+
+      return output;
+    }, output);
+  }
+
+  function set(known, input, value) {
+    var index = Primitive(input.push(value) - 1);
+    known.set(value, index);
+    return index;
+  } // the two kinds of primitives
+  //  1. the real one
+  //  2. the wrapped one
+
+
+  function primitives(value) {
+    return value instanceof Primitive ? Primitive(value) : value;
+  }
+
+  function Primitives(key, value) {
+    return typeof value === primitive ? new Primitive(value) : value;
+  }
+}(String, 'string');
+
+var _default = Flatted;
+exports.default = _default;
+var parse = Flatted.parse;
+exports.parse = parse;
+var stringify = Flatted.stringify;
+exports.stringify = stringify;
+},{}],"node_modules/strip-indent/index.js":[function(require,module,exports) {
+'use strict';
+
+module.exports = str => {
+  const match = str.match(/^[ \t]*(?=\S)/gm);
+
+  if (!match) {
+    return str;
+  } // TODO: use spread operator when targeting Node.js 6
+
+
+  const indent = Math.min.apply(Math, match.map(x => x.length)); // eslint-disable-line
+
+  const re = new RegExp("^[ \\t]{".concat(indent, "}"), 'gm');
+  return indent > 0 ? str.replace(re, '') : str;
+};
+},{}],"node_modules/html-literal/build/src/index.js":[function(require,module,exports) {
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+var flatted_1 = require("flatted");
+var strip_indent_1 = __importDefault(require("strip-indent"));
+// html tag function, accepts simple values, arrays, promises
+function html(template) {
+    var expressions = [];
+    for (var _i = 1; _i < arguments.length; _i++) {
+        expressions[_i - 1] = arguments[_i];
+    }
+    var result = "";
+    var i = 0;
+    // resolve each expression and build the result string
+    for (var _a = 0, template_1 = template; _a < template_1.length; _a++) {
+        var part = template_1[_a];
+        var expression = expressions[i++ - 1]; // this might be an array
+        var resolvedExpression = resolveExpression(expression);
+        result += "" + resolvedExpression + part;
+    }
+    // strip indentation and trim the result
+    return strip_indent_1.default(result).trim();
+}
+exports.default = html;
+// returns whether given value is likely a promise
+// tslint:disable-next-line:no-any
+function isPromise(p) {
+    return p !== undefined && p !== null && typeof p === "object" && typeof p.then === "function";
+}
+// resolves a concatenatable expression to a string (async)
+function resolveExpression(expression) {
+    // return empty string for undefined
+    if (expression === undefined) {
+        return "";
+    }
+    // return placeholder for promise
+    if (isPromise(expression)) {
+        // recursively resolve
+        return "[promise]";
+    }
+    // return placeholder for function
+    if (typeof expression === "function") {
+        return "[function]";
+    }
+    // handle arrays
+    if (Array.isArray(expression)) {
+        var items = [];
+        // resolve each item (might be promises as well)
+        for (var _i = 0, expression_1 = expression; _i < expression_1.length; _i++) {
+            var expressionItem = expression_1[_i];
+            items.push(resolveExpression(expressionItem));
+        }
+        // join with newline
+        return items.join("\n");
+    }
+    // return unmodified if got a string
+    if (typeof expression === "string") {
+        return expression;
+    }
+    // convert to string if got a number
+    if (typeof expression === "number") {
+        return expression.toString();
+    }
+    // return stringified value, handles circular references
+    return flatted_1.stringify(expression, undefined, 2);
+}
+
+},{"flatted":"node_modules/flatted/esm/index.js","strip-indent":"node_modules/strip-indent/index.js"}],"components/views/Bio.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _htmlLiteral = _interopRequireDefault(require("html-literal"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n    <section id=\"Bio\">\n      <h1>About Me:</h1>\n      <ul>\n        <li>Education</li>\n        <p>\n          I graduated from Penn State Beaver in 2006 with a BS in Psychology.\n        </p>\n        <li>Life Experiences</li>\n        <p>\n          I worked in adult Psychiatric Care for 5 years after I graduated. I\n          chose to make a career change as a full-time Nanny, where I worked for\n          3 years. I am currently a stay at home mom that loves reading with her\n          children.\n        </p>\n        <li>Career Goals</li>\n        <p>\n          The time I spent as a Nanny and a stay at home mom has taught me how\n          important reading is to childhood development. It is for this reason\n          that I chose to become a Consultant for Usborne. I hope to help more\n          moms create this love of learning in their homes.\n        </p>\n      </ul>\n    </section>\n  "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var _default = function _default() {
+  return (0, _htmlLiteral.default)(_templateObject());
+};
+
+exports.default = _default;
+},{"html-literal":"node_modules/html-literal/build/src/index.js"}],"components/views/Blog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _htmlLiteral = _interopRequireDefault(require("html-literal"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _templateObject() {
+  var data = _taggedTemplateLiteral(["\n    <section id=\"Blog\">\n      <h1>Thank you for visiting my site!</h1>\n      <h2>\n        Please leave me a comment about your experience below. Your comments\n        will be posted to this page when you hit enter.\n      </h2>\n      <textfield>\n        <textarea type=\"text\" id=\"text\" rows=\"10\" cols=\"100\"></textarea>\n      </textfield>\n      <div>\n        <button><a href=\"#Post\"></a>Enter</button>\n      </div>\n    </section>\n  "]);
+
+  _templateObject = function _templateObject() {
+    return data;
+  };
+
+  return data;
+}
+
+function _taggedTemplateLiteral(strings, raw) { if (!raw) { raw = strings.slice(0); } return Object.freeze(Object.defineProperties(strings, { raw: { value: Object.freeze(raw) } })); }
+
+var _default = function _default() {
+  return (0, _htmlLiteral.default)(_templateObject());
+};
+
+exports.default = _default;
+},{"html-literal":"node_modules/html-literal/build/src/index.js"}],"components/views/Post.js":[function(require,module,exports) {
 "use strict";
 
 Object.defineProperty(exports, "__esModule", {
@@ -165,11 +425,244 @@ Object.defineProperty(exports, "__esModule", {
 exports.default = void 0;
 
 var _default = function _default() {
-  return "\n    <section id=\"Bio\">\n        <h1>About Me:</h1>\n        <ul>\n            <li>Education</li>\n                <p>I graduated from Penn State Beaver in 2006 with a BS in Psychology.</p>\n            <li>Life Experiences</li>\n                <p>I worked in adult Psychiatric Care for 5 years after I graduated. \n                I chose to make a career change as a full-time Nanny, where I worked for 3 years. \n                I am currently a stay at home mom that loves reading with her children.</p>\n            <li>Career Goals</li>\n                <p>The time I spent as a Nanny and a stay at home mom has taught me how important reading is to childhood development. \n                It is for this reason that I chose to become a Consultant for Usborne.\n                I hope to help more moms create this love of learning in their homes.</p>\n        </ul>\n    </section>\n";
+  return "\n    <section id =\"Post\">\n        <h1>See what other people think.</h1>\n    </section>\n    ";
 };
 
 exports.default = _default;
-},{}],"node_modules/base64-js/index.js":[function(require,module,exports) {
+},{}],"components/views/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Home", {
+  enumerable: true,
+  get: function () {
+    return _Home.default;
+  }
+});
+Object.defineProperty(exports, "Bio", {
+  enumerable: true,
+  get: function () {
+    return _Bio.default;
+  }
+});
+Object.defineProperty(exports, "Blog", {
+  enumerable: true,
+  get: function () {
+    return _Blog.default;
+  }
+});
+Object.defineProperty(exports, "Post", {
+  enumerable: true,
+  get: function () {
+    return _Post.default;
+  }
+});
+
+var _Home = _interopRequireDefault(require("./Home"));
+
+var _Bio = _interopRequireDefault(require("./Bio"));
+
+var _Blog = _interopRequireDefault(require("./Blog"));
+
+var _Post = _interopRequireDefault(require("./Post"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Home":"components/views/Home.js","./Bio":"components/views/Bio.js","./Blog":"components/views/Blog.js","./Post":"components/views/Post.js"}],"components/Main.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var views = _interopRequireWildcard(require("./views"));
+
+function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
+
+function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
+
+var _default = function _default(st) {
+  return "\n".concat(views[st.view](st), "\n");
+};
+
+exports.default = _default;
+},{"./views":"components/views/index.js"}],"components/Nav.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+
+var _default = function _default(links) {
+  return "\n<nav>\n    <i class=\"fas fa-bars\"></i>\n        <ul class =\"hidden--mobile nav-links\">\n            ".concat(links.map(function (link) {
+    return "<li><a href=\"/".concat(link.title, "\" data-navigo>").concat(link.text, "</a></li>");
+  }).join(""), "\n        </ul>\n</nav>");
+};
+
+exports.default = _default;
+},{}],"components/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Header", {
+  enumerable: true,
+  get: function () {
+    return _Header.default;
+  }
+});
+Object.defineProperty(exports, "Footer", {
+  enumerable: true,
+  get: function () {
+    return _Footer.default;
+  }
+});
+Object.defineProperty(exports, "Main", {
+  enumerable: true,
+  get: function () {
+    return _Main.default;
+  }
+});
+Object.defineProperty(exports, "Nav", {
+  enumerable: true,
+  get: function () {
+    return _Nav.default;
+  }
+});
+
+var _Header = _interopRequireDefault(require("./Header"));
+
+var _Footer = _interopRequireDefault(require("./Footer"));
+
+var _Main = _interopRequireDefault(require("./Main"));
+
+var _Nav = _interopRequireDefault(require("./Nav"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Header":"components/Header.js","./Footer":"components/Footer.js","./Main":"components/Main.js","./Nav":"components/Nav.js"}],"store/Bio.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Bio"
+};
+exports.default = _default;
+},{}],"store/Blog.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Blog",
+  posts: []
+};
+exports.default = _default;
+},{}],"store/Home.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Home"
+};
+exports.default = _default;
+},{}],"store/Links.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = [{
+  title: "Home",
+  text: "Home"
+}, {
+  title: "Bio",
+  text: "Bio"
+}, {
+  title: "Blog",
+  text: "Blog"
+}, {
+  title: "Post",
+  text: "Post"
+}];
+exports.default = _default;
+},{}],"store/Post.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = void 0;
+var _default = {
+  header: "",
+  view: "Post",
+  posts: []
+};
+exports.default = _default;
+},{}],"store/index.js":[function(require,module,exports) {
+"use strict";
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+Object.defineProperty(exports, "Bio", {
+  enumerable: true,
+  get: function () {
+    return _Bio.default;
+  }
+});
+Object.defineProperty(exports, "Blog", {
+  enumerable: true,
+  get: function () {
+    return _Blog.default;
+  }
+});
+Object.defineProperty(exports, "Home", {
+  enumerable: true,
+  get: function () {
+    return _Home.default;
+  }
+});
+Object.defineProperty(exports, "Links", {
+  enumerable: true,
+  get: function () {
+    return _Links.default;
+  }
+});
+Object.defineProperty(exports, "Post", {
+  enumerable: true,
+  get: function () {
+    return _Post.default;
+  }
+});
+
+var _Bio = _interopRequireDefault(require("./Bio"));
+
+var _Blog = _interopRequireDefault(require("./Blog"));
+
+var _Home = _interopRequireDefault(require("./Home"));
+
+var _Links = _interopRequireDefault(require("./Links"));
+
+var _Post = _interopRequireDefault(require("./Post"));
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+},{"./Bio":"store/Bio.js","./Blog":"store/Blog.js","./Home":"store/Home.js","./Links":"store/Links.js","./Post":"store/Post.js"}],"node_modules/base64-js/index.js":[function(require,module,exports) {
 'use strict'
 
 exports.byteLength = byteLength
@@ -297,9 +790,7 @@ function fromByteArray (uint8) {
 
   // go through the array every three bytes, we'll deal with trailing stuff later
   for (var i = 0, len2 = len - extraBytes; i < len2; i += maxChunkLength) {
-    parts.push(encodeChunk(
-      uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)
-    ))
+    parts.push(encodeChunk(uint8, i, (i + maxChunkLength) > len2 ? len2 : (i + maxChunkLength)))
   }
 
   // pad the end with zeros, but make sure to not forget the extra bytes
@@ -324,6 +815,7 @@ function fromByteArray (uint8) {
 }
 
 },{}],"node_modules/ieee754/index.js":[function(require,module,exports) {
+/*! ieee754. BSD-3-Clause License. Feross Aboukhadijeh <https://feross.org/opensource> */
 exports.read = function (buffer, offset, isLE, mLen, nBytes) {
   var e, m
   var eLen = (nBytes * 8) - mLen - 1
@@ -2227,7 +2719,7 @@ var define;
   var undefined;
 
   /** Used as the semantic version number. */
-  var VERSION = '4.17.15';
+  var VERSION = '4.17.20';
 
   /** Used as the size to enable large array optimizations. */
   var LARGE_ARRAY_SIZE = 200;
@@ -5934,8 +6426,21 @@ var define;
      * @returns {Array} Returns the new sorted array.
      */
     function baseOrderBy(collection, iteratees, orders) {
+      if (iteratees.length) {
+        iteratees = arrayMap(iteratees, function(iteratee) {
+          if (isArray(iteratee)) {
+            return function(value) {
+              return baseGet(value, iteratee.length === 1 ? iteratee[0] : iteratee);
+            }
+          }
+          return iteratee;
+        });
+      } else {
+        iteratees = [identity];
+      }
+
       var index = -1;
-      iteratees = arrayMap(iteratees.length ? iteratees : [identity], baseUnary(getIteratee()));
+      iteratees = arrayMap(iteratees, baseUnary(getIteratee()));
 
       var result = baseMap(collection, function(value, key, collection) {
         var criteria = arrayMap(iteratees, function(iteratee) {
@@ -6192,6 +6697,10 @@ var define;
         var key = toKey(path[index]),
             newValue = value;
 
+        if (key === '__proto__' || key === 'constructor' || key === 'prototype') {
+          return object;
+        }
+
         if (index != lastIndex) {
           var objValue = nested[key];
           newValue = customizer ? customizer(objValue, key, nested) : undefined;
@@ -6344,11 +6853,14 @@ var define;
      *  into `array`.
      */
     function baseSortedIndexBy(array, value, iteratee, retHighest) {
-      value = iteratee(value);
-
       var low = 0,
-          high = array == null ? 0 : array.length,
-          valIsNaN = value !== value,
+          high = array == null ? 0 : array.length;
+      if (high === 0) {
+        return 0;
+      }
+
+      value = iteratee(value);
+      var valIsNaN = value !== value,
           valIsNull = value === null,
           valIsSymbol = isSymbol(value),
           valIsUndefined = value === undefined;
@@ -7833,10 +8345,11 @@ var define;
       if (arrLength != othLength && !(isPartial && othLength > arrLength)) {
         return false;
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(array);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var arrStacked = stack.get(array);
+      var othStacked = stack.get(other);
+      if (arrStacked && othStacked) {
+        return arrStacked == other && othStacked == array;
       }
       var index = -1,
           result = true,
@@ -7998,10 +8511,11 @@ var define;
           return false;
         }
       }
-      // Assume cyclic values are equal.
-      var stacked = stack.get(object);
-      if (stacked && stack.get(other)) {
-        return stacked == other;
+      // Check that cyclic values are equal.
+      var objStacked = stack.get(object);
+      var othStacked = stack.get(other);
+      if (objStacked && othStacked) {
+        return objStacked == other && othStacked == object;
       }
       var result = true;
       stack.set(object, other);
@@ -11382,6 +11896,10 @@ var define;
      * // The `_.property` iteratee shorthand.
      * _.filter(users, 'active');
      * // => objects for ['barney']
+     *
+     * // Combining several predicates using `_.overEvery` or `_.overSome`.
+     * _.filter(users, _.overSome([{ 'age': 36 }, ['age', 40]]));
+     * // => objects for ['fred', 'barney']
      */
     function filter(collection, predicate) {
       var func = isArray(collection) ? arrayFilter : baseFilter;
@@ -12131,15 +12649,15 @@ var define;
      * var users = [
      *   { 'user': 'fred',   'age': 48 },
      *   { 'user': 'barney', 'age': 36 },
-     *   { 'user': 'fred',   'age': 40 },
+     *   { 'user': 'fred',   'age': 30 },
      *   { 'user': 'barney', 'age': 34 }
      * ];
      *
      * _.sortBy(users, [function(o) { return o.user; }]);
-     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 40]]
+     * // => objects for [['barney', 36], ['barney', 34], ['fred', 48], ['fred', 30]]
      *
      * _.sortBy(users, ['user', 'age']);
-     * // => objects for [['barney', 34], ['barney', 36], ['fred', 40], ['fred', 48]]
+     * // => objects for [['barney', 34], ['barney', 36], ['fred', 30], ['fred', 48]]
      */
     var sortBy = baseRest(function(collection, iteratees) {
       if (collection == null) {
@@ -17014,11 +17532,11 @@ var define;
 
       // Use a sourceURL for easier debugging.
       // The sourceURL gets injected into the source that's eval-ed, so be careful
-      // with lookup (in case of e.g. prototype pollution), and strip newlines if any.
-      // A newline wouldn't be a valid sourceURL anyway, and it'd enable code injection.
+      // to normalize all kinds of whitespace, so e.g. newlines (and unicode versions of it) can't sneak in
+      // and escape the comment, thus injecting code that gets evaled.
       var sourceURL = '//# sourceURL=' +
         (hasOwnProperty.call(options, 'sourceURL')
-          ? (options.sourceURL + '').replace(/[\r\n]/g, ' ')
+          ? (options.sourceURL + '').replace(/\s/g, ' ')
           : ('lodash.templateSources[' + (++templateCounter) + ']')
         ) + '\n';
 
@@ -17051,8 +17569,6 @@ var define;
 
       // If `variable` is not specified wrap a with-statement around the generated
       // code to add the data object to the top of the scope chain.
-      // Like with sourceURL, we take care to not check the option's prototype,
-      // as this configuration is a code injection vector.
       var variable = hasOwnProperty.call(options, 'variable') && options.variable;
       if (!variable) {
         source = 'with (obj) {\n' + source + '\n}\n';
@@ -17759,6 +18275,9 @@ var define;
      * values against any array or object value, respectively. See `_.isEqual`
      * for a list of supported value comparisons.
      *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
+     *
      * @static
      * @memberOf _
      * @since 3.0.0
@@ -17774,6 +18293,10 @@ var define;
      *
      * _.filter(objects, _.matches({ 'a': 4, 'c': 6 }));
      * // => [{ 'a': 4, 'b': 5, 'c': 6 }]
+     *
+     * // Checking for several possible values
+     * _.filter(objects, _.overSome([_.matches({ 'a': 1 }), _.matches({ 'a': 4 })]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matches(source) {
       return baseMatches(baseClone(source, CLONE_DEEP_FLAG));
@@ -17787,6 +18310,9 @@ var define;
      * **Note:** Partial comparisons will match empty array and empty object
      * `srcValue` values against any array or object value, respectively. See
      * `_.isEqual` for a list of supported value comparisons.
+     *
+     * **Note:** Multiple values can be checked by combining several matchers
+     * using `_.overSome`
      *
      * @static
      * @memberOf _
@@ -17804,6 +18330,10 @@ var define;
      *
      * _.find(objects, _.matchesProperty('a', 4));
      * // => { 'a': 4, 'b': 5, 'c': 6 }
+     *
+     * // Checking for several possible values
+     * _.filter(objects, _.overSome([_.matchesProperty('a', 1), _.matchesProperty('a', 4)]));
+     * // => [{ 'a': 1, 'b': 2, 'c': 3 }, { 'a': 4, 'b': 5, 'c': 6 }]
      */
     function matchesProperty(path, srcValue) {
       return baseMatchesProperty(path, baseClone(srcValue, CLONE_DEEP_FLAG));
@@ -18027,6 +18557,10 @@ var define;
      * Creates a function that checks if **all** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -18053,6 +18587,10 @@ var define;
      * Creates a function that checks if **any** of the `predicates` return
      * truthy when invoked with the arguments it receives.
      *
+     * Following shorthands are possible for providing predicates.
+     * Pass an `Object` and it will be used as an parameter for `_.matches` to create the predicate.
+     * Pass an `Array` of parameters for `_.matchesProperty` and the predicate will be created using them.
+     *
      * @static
      * @memberOf _
      * @since 4.0.0
@@ -18072,6 +18610,9 @@ var define;
      *
      * func(NaN);
      * // => false
+     *
+     * var matchesFunc = _.overSome([{ 'a': 1 }, { 'a': 2 }])
+     * var matchesPropertyFunc = _.overSome([['a', 1], ['a', 2]])
      */
     var overSome = createOver(arraySome);
 
@@ -19326,268 +19867,7 @@ var define;
   }
 }.call(this));
 
-},{"buffer":"node_modules/buffer/index.js"}],"components/views/Blog.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _lodash = require("lodash");
-
-var _default = function _default() {
-  return "\n    <section id=\"Blog\">\n        <h1>Thank you for visiting my site!</h1>\n        <h2>Please leave me a comment about your experience below. Your comments\n        will be posted to this page when you hit enter.</h2>\n        <textfield>\n          <textarea type =\"text\" id=\"text\" rows=\"10\" cols=\"100\"></textarea>\n        </textfield>\n        <div>\n          <button><a href=\"#Post\"></a>Enter</button>\n        </div>\n    </section>\n";
-};
-
-exports.default = _default;
-},{"lodash":"node_modules/lodash/lodash.js"}],"components/views/Post.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _default = function _default() {
-  return "\n    <section id =\"Post\">\n        <h1>See what other people think.</h1>\n    </section>\n    ";
-};
-
-exports.default = _default;
-},{}],"components/views/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Home", {
-  enumerable: true,
-  get: function () {
-    return _Home.default;
-  }
-});
-Object.defineProperty(exports, "Bio", {
-  enumerable: true,
-  get: function () {
-    return _Bio.default;
-  }
-});
-Object.defineProperty(exports, "Blog", {
-  enumerable: true,
-  get: function () {
-    return _Blog.default;
-  }
-});
-Object.defineProperty(exports, "Post", {
-  enumerable: true,
-  get: function () {
-    return _Post.default;
-  }
-});
-
-var _Home = _interopRequireDefault(require("./Home"));
-
-var _Bio = _interopRequireDefault(require("./Bio"));
-
-var _Blog = _interopRequireDefault(require("./Blog"));
-
-var _Post = _interopRequireDefault(require("./Post"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Home":"components/views/Home.js","./Bio":"components/views/Bio.js","./Blog":"components/views/Blog.js","./Post":"components/views/Post.js"}],"components/Main.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var views = _interopRequireWildcard(require("./views"));
-
-function _getRequireWildcardCache() { if (typeof WeakMap !== "function") return null; var cache = new WeakMap(); _getRequireWildcardCache = function () { return cache; }; return cache; }
-
-function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } if (obj === null || typeof obj !== "object" && typeof obj !== "function") { return { default: obj }; } var cache = _getRequireWildcardCache(); if (cache && cache.has(obj)) { return cache.get(obj); } var newObj = {}; var hasPropertyDescriptor = Object.defineProperty && Object.getOwnPropertyDescriptor; for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) { var desc = hasPropertyDescriptor ? Object.getOwnPropertyDescriptor(obj, key) : null; if (desc && (desc.get || desc.set)) { Object.defineProperty(newObj, key, desc); } else { newObj[key] = obj[key]; } } } newObj.default = obj; if (cache) { cache.set(obj, newObj); } return newObj; }
-
-var _default = function _default(st) {
-  return "\n".concat(views[st.view](st), "\n");
-};
-
-exports.default = _default;
-},{"./views":"components/views/index.js"}],"components/Nav.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-
-var _default = function _default(links) {
-  return "\n<nav>\n    <i class=\"fas fa-bars\"></i>\n        <ul class =\"hidden--mobile nav-links\">\n            ".concat(links.map(function (link) {
-    return "<li><a href=\"/".concat(link.title, "\" data-navigo>").concat(link.text, "</a></li>");
-  }).join(""), "\n        </ul>\n</nav>");
-};
-
-exports.default = _default;
-},{}],"components/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Header", {
-  enumerable: true,
-  get: function () {
-    return _Header.default;
-  }
-});
-Object.defineProperty(exports, "Footer", {
-  enumerable: true,
-  get: function () {
-    return _Footer.default;
-  }
-});
-Object.defineProperty(exports, "Main", {
-  enumerable: true,
-  get: function () {
-    return _Main.default;
-  }
-});
-Object.defineProperty(exports, "Nav", {
-  enumerable: true,
-  get: function () {
-    return _Nav.default;
-  }
-});
-
-var _Header = _interopRequireDefault(require("./Header"));
-
-var _Footer = _interopRequireDefault(require("./Footer"));
-
-var _Main = _interopRequireDefault(require("./Main"));
-
-var _Nav = _interopRequireDefault(require("./Nav"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Header":"components/Header.js","./Footer":"components/Footer.js","./Main":"components/Main.js","./Nav":"components/Nav.js"}],"store/Bio.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Bio"
-};
-exports.default = _default;
-},{}],"store/Blog.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Blog",
-  posts: []
-};
-exports.default = _default;
-},{}],"store/Home.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Home"
-};
-exports.default = _default;
-},{}],"store/Links.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = [{
-  title: "Home",
-  text: "Home"
-}, {
-  title: "Bio",
-  text: "Bio"
-}, {
-  title: "Blog",
-  text: "Blog"
-}, {
-  title: "Post",
-  text: "Post"
-}];
-exports.default = _default;
-},{}],"store/Post.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-exports.default = void 0;
-var _default = {
-  header: "",
-  view: "Post",
-  posts: []
-};
-exports.default = _default;
-},{}],"store/index.js":[function(require,module,exports) {
-"use strict";
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-Object.defineProperty(exports, "Bio", {
-  enumerable: true,
-  get: function () {
-    return _Bio.default;
-  }
-});
-Object.defineProperty(exports, "Blog", {
-  enumerable: true,
-  get: function () {
-    return _Blog.default;
-  }
-});
-Object.defineProperty(exports, "Home", {
-  enumerable: true,
-  get: function () {
-    return _Home.default;
-  }
-});
-Object.defineProperty(exports, "Links", {
-  enumerable: true,
-  get: function () {
-    return _Links.default;
-  }
-});
-Object.defineProperty(exports, "Post", {
-  enumerable: true,
-  get: function () {
-    return _Post.default;
-  }
-});
-
-var _Bio = _interopRequireDefault(require("./Bio"));
-
-var _Blog = _interopRequireDefault(require("./Blog"));
-
-var _Home = _interopRequireDefault(require("./Home"));
-
-var _Links = _interopRequireDefault(require("./Links"));
-
-var _Post = _interopRequireDefault(require("./Post"));
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-},{"./Bio":"store/Bio.js","./Blog":"store/Blog.js","./Home":"store/Home.js","./Links":"store/Links.js","./Post":"store/Post.js"}],"node_modules/navigo/lib/navigo.min.js":[function(require,module,exports) {
+},{"buffer":"node_modules/buffer/index.js"}],"node_modules/navigo/lib/navigo.min.js":[function(require,module,exports) {
 var define;
 !function(e,t){"object"==typeof exports&&"undefined"!=typeof module?module.exports=t():"function"==typeof define&&define.amd?define(t):e.Navigo=t()}(this,function(){"use strict";var e="function"==typeof Symbol&&"symbol"==typeof Symbol.iterator?function(e){return typeof e}:function(e){return e&&"function"==typeof Symbol&&e.constructor===Symbol&&e!==Symbol.prototype?"symbol":typeof e};function t(){return!("undefined"==typeof window||!window.history||!window.history.pushState)}function n(e,n,o){this.root=null,this._routes=[],this._useHash=n,this._hash=void 0===o?"#":o,this._paused=!1,this._destroyed=!1,this._lastRouteResolved=null,this._notFoundHandler=null,this._defaultHandler=null,this._usePushState=!n&&t(),this._onLocationChange=this._onLocationChange.bind(this),this._genericHooks=null,this._historyAPIUpdateMethod="pushState",e?this.root=n?e.replace(/\/$/,"/"+this._hash):e.replace(/\/$/,""):n&&(this.root=this._cLoc().split(this._hash)[0].replace(/\/$/,"/"+this._hash)),this._listen(),this.updatePageLinks()}function o(e){return e instanceof RegExp?e:e.replace(/\/+$/,"").replace(/^\/+/,"^/")}function i(e){return e.replace(/\/$/,"").split("/").length}function s(e,t){return i(t)-i(e)}function r(e,t){return function(e){return(arguments.length>1&&void 0!==arguments[1]?arguments[1]:[]).map(function(t){var i=function(e){var t=[];return{regexp:e instanceof RegExp?e:new RegExp(e.replace(n.PARAMETER_REGEXP,function(e,o,i){return t.push(i),n.REPLACE_VARIABLE_REGEXP}).replace(n.WILDCARD_REGEXP,n.REPLACE_WILDCARD)+n.FOLLOWED_BY_SLASH_REGEXP,n.MATCH_REGEXP_FLAGS),paramNames:t}}(o(t.route)),s=i.regexp,r=i.paramNames,a=e.replace(/^\/+/,"/").match(s),h=function(e,t){return 0===t.length?null:e?e.slice(1,e.length).reduce(function(e,n,o){return null===e&&(e={}),e[t[o]]=decodeURIComponent(n),e},null):null}(a,r);return!!a&&{match:a,route:t,params:h}}).filter(function(e){return e})}(e,t)[0]||!1}function a(e,t){var n=t.map(function(t){return""===t.route||"*"===t.route?e:e.split(new RegExp(t.route+"($|/)"))[0]}),i=o(e);return n.length>1?n.reduce(function(e,t){return e.length>t.length&&(e=t),e},n[0]):1===n.length?n[0]:i}function h(e,n,o){var i,s=function(e){return e.split(/\?(.*)?$/)[0]};return void 0===o&&(o="#"),t()&&!n?s(e).split(o)[0]:(i=e.split(o)).length>1?s(i[1]):s(i[0])}function u(t,n,o){if(n&&"object"===(void 0===n?"undefined":e(n))){if(n.before)return void n.before(function(){(!(arguments.length>0&&void 0!==arguments[0])||arguments[0])&&(t(),n.after&&n.after(o))},o);if(n.after)return t(),void(n.after&&n.after(o))}t()}return n.prototype={helpers:{match:r,root:a,clean:o,getOnlyURL:h},navigate:function(e,t){var n;return e=e||"",this._usePushState?(n=(n=(t?"":this._getRoot()+"/")+e.replace(/^\/+/,"/")).replace(/([^:])(\/{2,})/g,"$1/"),history[this._historyAPIUpdateMethod]({},"",n),this.resolve()):"undefined"!=typeof window&&(e=e.replace(new RegExp("^"+this._hash),""),window.location.href=window.location.href.replace(/#$/,"").replace(new RegExp(this._hash+".*$"),"")+this._hash+e),this},on:function(){for(var t=this,n=arguments.length,o=Array(n),i=0;i<n;i++)o[i]=arguments[i];if("function"==typeof o[0])this._defaultHandler={handler:o[0],hooks:o[1]};else if(o.length>=2)if("/"===o[0]){var r=o[1];"object"===e(o[1])&&(r=o[1].uses),this._defaultHandler={handler:r,hooks:o[2]}}else this._add(o[0],o[1],o[2]);else"object"===e(o[0])&&Object.keys(o[0]).sort(s).forEach(function(e){t.on(e,o[0][e])});return this},off:function(e){return null!==this._defaultHandler&&e===this._defaultHandler.handler?this._defaultHandler=null:null!==this._notFoundHandler&&e===this._notFoundHandler.handler&&(this._notFoundHandler=null),this._routes=this._routes.reduce(function(t,n){return n.handler!==e&&t.push(n),t},[]),this},notFound:function(e,t){return this._notFoundHandler={handler:e,hooks:t},this},resolve:function(e){var n,o,i=this,s=(e||this._cLoc()).replace(this._getRoot(),"");this._useHash&&(s=s.replace(new RegExp("^/"+this._hash),"/"));var a=function(e){return e.split(/\?(.*)?$/).slice(1).join("")}(e||this._cLoc()),l=h(s,this._useHash,this._hash);return!this._paused&&(this._lastRouteResolved&&l===this._lastRouteResolved.url&&a===this._lastRouteResolved.query?(this._lastRouteResolved.hooks&&this._lastRouteResolved.hooks.already&&this._lastRouteResolved.hooks.already(this._lastRouteResolved.params),!1):(o=r(l,this._routes))?(this._callLeave(),this._lastRouteResolved={url:l,query:a,hooks:o.route.hooks,params:o.params,name:o.route.name},n=o.route.handler,u(function(){u(function(){o.route.route instanceof RegExp?n.apply(void 0,o.match.slice(1,o.match.length)):n(o.params,a)},o.route.hooks,o.params,i._genericHooks)},this._genericHooks,o.params),o):this._defaultHandler&&(""===l||"/"===l||l===this._hash||function(e,n,o){if(t()&&!n)return!1;if(!e.match(o))return!1;var i=e.split(o);return i.length<2||""===i[1]}(l,this._useHash,this._hash))?(u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._defaultHandler.hooks},i._defaultHandler.handler(a)},i._defaultHandler.hooks)},this._genericHooks),!0):(this._notFoundHandler&&u(function(){u(function(){i._callLeave(),i._lastRouteResolved={url:l,query:a,hooks:i._notFoundHandler.hooks},i._notFoundHandler.handler(a)},i._notFoundHandler.hooks)},this._genericHooks),!1))},destroy:function(){this._routes=[],this._destroyed=!0,this._lastRouteResolved=null,this._genericHooks=null,clearTimeout(this._listeningInterval),"undefined"!=typeof window&&(window.removeEventListener("popstate",this._onLocationChange),window.removeEventListener("hashchange",this._onLocationChange))},updatePageLinks:function(){var e=this;"undefined"!=typeof document&&this._findLinks().forEach(function(t){t.hasListenerAttached||(t.addEventListener("click",function(n){if((n.ctrlKey||n.metaKey)&&"a"==n.target.tagName.toLowerCase())return!1;var o=e.getLinkPath(t);e._destroyed||(n.preventDefault(),e.navigate(o.replace(/\/+$/,"").replace(/^\/+/,"/")))}),t.hasListenerAttached=!0)})},generate:function(e){var t=arguments.length>1&&void 0!==arguments[1]?arguments[1]:{},n=this._routes.reduce(function(n,o){var i;if(o.name===e)for(i in n=o.route,t)n=n.toString().replace(":"+i,t[i]);return n},"");return this._useHash?this._hash+n:n},link:function(e){return this._getRoot()+e},pause:function(){var e=!(arguments.length>0&&void 0!==arguments[0])||arguments[0];this._paused=e,this._historyAPIUpdateMethod=e?"replaceState":"pushState"},resume:function(){this.pause(!1)},historyAPIUpdateMethod:function(e){return void 0===e?this._historyAPIUpdateMethod:(this._historyAPIUpdateMethod=e,e)},disableIfAPINotAvailable:function(){t()||this.destroy()},lastRouteResolved:function(){return this._lastRouteResolved},getLinkPath:function(e){return e.getAttribute("href")},hooks:function(e){this._genericHooks=e},_add:function(t){var n=arguments.length>1&&void 0!==arguments[1]?arguments[1]:null,o=arguments.length>2&&void 0!==arguments[2]?arguments[2]:null;return"string"==typeof t&&(t=encodeURI(t)),this._routes.push("object"===(void 0===n?"undefined":e(n))?{route:t,handler:n.uses,name:n.as,hooks:o||n.hooks}:{route:t,handler:n,hooks:o}),this._add},_getRoot:function(){return null!==this.root?this.root:(this.root=a(this._cLoc().split("?")[0],this._routes),this.root)},_listen:function(){var e=this;if(this._usePushState)window.addEventListener("popstate",this._onLocationChange);else if("undefined"!=typeof window&&"onhashchange"in window)window.addEventListener("hashchange",this._onLocationChange);else{var t=this._cLoc(),n=void 0,o=void 0;(o=function(){n=e._cLoc(),t!==n&&(t=n,e.resolve()),e._listeningInterval=setTimeout(o,200)})()}},_cLoc:function(){return"undefined"!=typeof window?void 0!==window.__NAVIGO_WINDOW_LOCATION_MOCK__?window.__NAVIGO_WINDOW_LOCATION_MOCK__:o(window.location.href):""},_findLinks:function(){return[].slice.call(document.querySelectorAll("[data-navigo]"))},_onLocationChange:function(){this.resolve()},_callLeave:function(){var e=this._lastRouteResolved;e&&e.hooks&&e.hooks.leave&&e.hooks.leave(e.params)}},n.PARAMETER_REGEXP=/([:*])(\w+)/g,n.WILDCARD_REGEXP=/\*/g,n.REPLACE_VARIABLE_REGEXP="([^/]+)",n.REPLACE_WILDCARD="(?:.*)",n.FOLLOWED_BY_SLASH_REGEXP="(?:/$|$)",n.MATCH_REGEXP_FLAGS="",n});
 
@@ -19663,7 +19943,7 @@ var parent = module.bundle.parent;
 if ((!parent || !parent.isParcelRequire) && typeof WebSocket !== 'undefined') {
   var hostname = "" || location.hostname;
   var protocol = location.protocol === 'https:' ? 'wss' : 'ws';
-  var ws = new WebSocket(protocol + '://' + hostname + ':' + "61676" + '/');
+  var ws = new WebSocket(protocol + '://' + hostname + ':' + "63117" + '/');
 
   ws.onmessage = function (event) {
     checkedAssets = {};
